@@ -5,13 +5,8 @@ const prisma = new PrismaClient()
 
 const promiseArr: Promise<void>[] = []
 
-/** USERS */
-promiseArr.push(
-    createUser(prisma).then(
-        () => undefined
-      )
-)
+promiseArr.push(createUser(prisma).then(() => undefined))
 
 Promise.all(promiseArr).then(() => {
-    prisma.$disconnect()
-  })
+  prisma.$disconnect()
+})
