@@ -11,7 +11,7 @@ import FormGroup from "@mui/material/FormGroup"
 import MenuItem from "@mui/material/MenuItem"
 import Menu from "@mui/material/Menu"
 import { useState } from "react"
-import Signup from "../pages/signup"
+import Signup from "./signup"
 
 function Appbar() {
   const [auth, setAuth] = React.useState(true)
