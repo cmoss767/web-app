@@ -13,6 +13,8 @@ import {
   Modal,
 } from "@mui/material"
 import { Dispatch, SetStateAction } from "react"
+import { useForm, Controller } from "react-hook-form"
+import useLogin from "../hooks/user/useLogin"
 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 
@@ -37,15 +39,22 @@ export interface SignupProps {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
 }
+interface LoginFields {
+  email: string
+  password: string
+}
 
 const SignUp = ({ open, setOpen }: SignupProps) => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    })
+  const formMethods = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  })
+  const login = useLogin()
+
+  const onSubmit = (data: { email: string; password: string }) => {
+    login.mutateAsync(data)
   }
 
   const handleClose = () => setOpen(false)
@@ -74,56 +83,31 @@ const SignUp = ({ open, setOpen }: SignupProps) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Sign In
           </Typography>
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={formMethods.handleSubmit(onSubmit)}
             sx={{ mt: 3, px: 5 }}
           >
-            <TextField
-              autoComplete="given-name"
-              name="firstName"
-              required
-              fullWidth
-              id="firstName"
-              label="First Name"
-              autoFocus
+            <Controller
+              name={"email"}
+              control={formMethods.control}
+              render={({ field: { onChange, value } }) => (
+                <TextField onChange={onChange} value={value} label={"Email"} />
+              )}
             />
-
-            <TextField
-              required
-              fullWidth
-              id="lastName"
-              label="Last Name"
-              name="lastName"
-              autoComplete="family-name"
-            />
-
-            <TextField
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-            />
-
-            <TextField
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="new-password"
-            />
-
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive inspiration, marketing promotions and updates via email."
-              sx={{ color: "black" }}
+            <Controller
+              name={"password"}
+              control={formMethods.control}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  onChange={onChange}
+                  value={value}
+                  label={"Password"}
+                />
+              )}
             />
 
             <Button
@@ -132,12 +116,12 @@ const SignUp = ({ open, setOpen }: SignupProps) => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Sign In
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="#" variant="body2">
-                  Already have an account? Sign in
+                  Don't have an account? Sign up
                 </Link>
               </Grid>
             </Grid>

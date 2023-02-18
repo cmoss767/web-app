@@ -1,6 +1,7 @@
 import { User } from "@prisma/client/index"
 import bcrypt from "bcryptjs"
 import { Request, Response } from "express"
+import { prisma } from "../../index"
 
 import errorHandler, { StatusError } from "../utils/errorHandler"
 
@@ -8,16 +9,15 @@ import generateUserTokens from "./utils/generateUserToken"
 
 const userAuth = async (req: Request, res: Response) => {
   try {
-    const body = res.locals?.data?.body as Partial<User>
+    const body = req?.body as Partial<User>
 
-    if (!body.phone && !body.email) {
+    if (!body.email) {
       throw new StatusError("Email or phone must be provided", 400)
     }
 
-    const user = await res.locals.prisma.user.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         email: body.email,
-        phone: body.phone,
       },
       select: {
         id: true,
@@ -47,7 +47,7 @@ const userAuth = async (req: Request, res: Response) => {
     }
 
     // Get user data
-    const selectedUser = await res.locals.prisma.user.findFirst({
+    const selectedUser = await prisma.user.findFirst({
       where: {
         id: user.id,
       },
@@ -55,7 +55,6 @@ const userAuth = async (req: Request, res: Response) => {
         id: true,
         first_name: true,
         last_name: true,
-        phone: true,
         email: true,
       },
     })

@@ -1,10 +1,23 @@
-import express from "express"
+import express, { Request, Response } from "express"
 import "dotenv/config"
 import { PrismaClient } from "@prisma/client"
 import userRouter from "./routes/users/routes"
+import cors from "cors"
+import bodyParser from "body-parser"
 
 const app = express()
-const prisma = new PrismaClient()
+export const prisma = new PrismaClient()
+
+app.use(
+  cors({
+    origin: ["http://localhost:5000", "http://localhost:5173"],
+  })
+)
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 app.use("/users", userRouter)
 

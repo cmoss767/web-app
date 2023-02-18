@@ -9,21 +9,6 @@ const create = async (req: Request, res: Response) => {
   try {
     const userToCreate = res.locals?.data.body as User
 
-    if (userToCreate.phone) {
-      const phoneExists = await res.locals.prisma.user.findFirst({
-        where: {
-          phone: userToCreate.phone,
-        },
-      })
-
-      if (phoneExists) {
-        throw new StatusError(
-          "An account with this phone number already exists",
-          402
-        )
-      }
-    }
-
     if (userToCreate.email) {
       const emailExists = await res.locals.prisma.user.findFirst({
         where: {

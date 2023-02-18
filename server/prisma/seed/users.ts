@@ -8,7 +8,6 @@ const createUser = async (prisma: PrismaClient) => {
     data: {
       first_name: "Chris",
       last_name: "Moss",
-      phone: "+18439816390",
       email: "hcmoss70@gmail.com",
       password: hash,
     },
